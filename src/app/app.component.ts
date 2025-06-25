@@ -42,13 +42,7 @@ export class AppComponent {
 
         this.eventSubscription = this.SSeService.getServerSentEvent(url).subscribe({
             next: (event) => {
-                console.log("Event ,,,,,");
-
-                const messageObj = JSON.parse(event.data);
-                console.log(this.messages, event, messageObj);
-
-                this.messages.push(messageObj);
-
+                this.fetchMesages();
             },
             error: (err) => {
                 console.error('Erreur SSE:', err);
