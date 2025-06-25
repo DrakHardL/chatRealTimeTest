@@ -1,18 +1,39 @@
 import { Component, ElementRef, HostListener, signal, ViewChild } from '@angular/core';
+import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
+import { InputNumberModule } from 'primeng/inputnumber';
+import { InputGroupModule } from 'primeng/inputgroup';
+import { InputTextModule } from 'primeng/inputtext';
+import { TextareaModule } from 'primeng/textarea';
 import { RouterOutlet } from '@angular/router';
+import { SelectModule } from 'primeng/select';
+import { ButtonModule } from 'primeng/button';
+import { FormsModule } from '@angular/forms';
 import { Subscription, take } from 'rxjs';
+import { CardModule } from 'primeng/card';
 
 import { EventSourceService } from './services/event-source.service';
-import { ApiService, Message } from './services/api.service';
+import { ApiService } from './services/api.service';
 
 
 @Component({
     selector: 'app-root',
-    imports: [RouterOutlet],
+    imports: [
+        CardModule,
+        RouterOutlet,
+        ButtonModule,
+        TextareaModule,
+        FormsModule,
+        InputGroupModule,
+        InputGroupAddonModule,
+        InputTextModule,
+        SelectModule,
+        InputNumberModule
+    ],
     templateUrl: './app.component.html',
-    styleUrl: './app.component.sass'
+    styleUrl: './app.component.scss'
 })
 export class AppComponent {
+    currentMessage: string | undefined;
     messages = signal([
         { message: "test", author: "front dev" },
     ]);
@@ -39,9 +60,9 @@ export class AppComponent {
         this.eventSubscription = this.SSeService.getServerSentEvent(url).subscribe({
             next: (event) => {
                 console.log("====--====");
-                
+
                 console.log("Event");
-                
+
                 this.fetchMesages();
             },
             error: (err) => {
@@ -63,14 +84,15 @@ export class AppComponent {
     }
 
     onSubmit() {
-        console.log("Test");
-
         this.apiService.sendMessage({
-            author: this.authorNpt.nativeElement.value,
-            message: this.messageNpt.nativeElement.value,
+            author: '685bf7c4bf87b398dbfb1be9',
+            message: this.currentMessage!,
         }).subscribe(() => {
             this.fetchMesages();
+
+            this.currentMessage = undefined;
         });
+
     }
 
 }

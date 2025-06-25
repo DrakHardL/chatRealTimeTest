@@ -1,13 +1,13 @@
-<div>
-  <label for="author">Author</label><input #author type="text">
-  <label for="message">Message</label><input #message type="text">
-  <button (click)="onSubmit()">Send</button>
-</div>
-
-<div>
-  @for (msg of messages(); track $index) {
-    <p>{{msg.author }} : {{msg.message }}</p>
+<div class="messages-section">
+  @for (msg of messages().reverse(); track $index) {
+  <p-card [header]="msg.author">
+    <p class="m-0">{{msg.message }} </p>
+  </p-card>
   }
 </div>
 
+<div class="send-section">
+  <textarea rows="1" cols="30" pTextarea [(ngModel)]="currentMessage"></textarea>
+  <p-button label="Search" (onClick)="onSubmit()"/>
+</div>
 <router-outlet />

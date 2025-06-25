@@ -21,9 +21,9 @@ export class ApiService {
     ) { }
 
     sendMessage(message: Message): Observable<Message> {
-        return this.http.post<Message>(`${this.URL}/api/messages`, message);
+        return this.http.post<Message>(`${this.URL}/api/message`, message);
     }
     getMessages(): Observable<Message[]> {
-        return this.http.get<Message[]>(`${this.URL}/api/messages`)
+        return this.http.get<Message[]>(`${this.URL}/api/message`)
     }
 }
