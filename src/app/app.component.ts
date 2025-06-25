@@ -1,4 +1,4 @@
-import { Component, ElementRef, HostListener, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostListener, signal, ViewChild } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { Subscription, take } from 'rxjs';
 
@@ -13,13 +13,9 @@ import { ApiService, Message } from './services/api.service';
     styleUrl: './app.component.sass'
 })
 export class AppComponent {
-    private messages: Message[] = [
+    messages = signal([
         { message: "test", author: "front dev" },
-    ];
-
-    get messagesVIEW() {
-        return this.messages;
-    }
+    ]);
 
     @HostListener('window:focus', [])
     onFocus() {
@@ -42,6 +38,10 @@ export class AppComponent {
 
         this.eventSubscription = this.SSeService.getServerSentEvent(url).subscribe({
             next: (event) => {
+                console.log("====--====");
+                
+                console.log("Event");
+                
                 this.fetchMesages();
             },
             error: (err) => {
@@ -52,7 +52,9 @@ export class AppComponent {
 
     private fetchMesages() {
         this.apiService.getMessages().pipe(take(1)).subscribe(rep => {
-            this.messages = rep;
+            console.log(this.messages);
+            this.messages.set(rep);
+            console.log(this.messages);
         })
     }
 

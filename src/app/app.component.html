@@ -5,8 +5,8 @@
 </div>
 
 <div>
-  @for (msg of messagesVIEW; track msg) {
-  <p>{{msg.author }} : {{msg.message }}</p>
+  @for (msg of messages(); track $index) {
+    <p>{{msg.author }} : {{msg.message }}</p>
   }
 </div>
 
