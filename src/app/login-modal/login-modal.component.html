@@ -1,0 +1,16 @@
+<p-dialog header="Connexion" [modal]="true" [(visible)]="visible" [position]="position" [style]="{ width: '25rem' }" [closeOnEscape]="false" [dismissableMask]="false">
+    <ng-template #headless>
+
+        <div class="flex items-center gap-4 mb-4">
+            <label for="username" class="font-semibold w-24">Username</label>
+            <input type="text" pInputText [(ngModel)]="username" />
+        </div>
+        <div class="flex items-center gap-4 mb-8">
+            <label for="email" class="font-semibold w-24">password</label>
+            <p-password [(ngModel)]="password" [feedback]="false" />
+        </div>
+        <div class="flex justify-end gap-2">
+            <p-button label="Save" (click)="onSubmit()" />
+        </div>
+    </ng-template>
+</p-dialog>

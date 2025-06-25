@@ -1,6 +1,6 @@
 <div class="messages-section">
   @for (msg of messages().reverse(); track $index) {
-  <p-card [header]="msg.author">
+  <p-card [header]="msg.author.name">
     <p class="m-0">{{msg.message }} </p>
   </p-card>
   }
@@ -11,3 +11,5 @@
   <p-button label="Search" (onClick)="onSubmit()"/>
 </div>
 <router-outlet />
+
+<app-login-modal [visible]="true"></app-login-modal>

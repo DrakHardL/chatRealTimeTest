@@ -1,4 +1,4 @@
-import { Component, ElementRef, HostListener, signal, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostListener, signal, ViewChild, WritableSignal } from '@angular/core';
 import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { InputGroupModule } from 'primeng/inputgroup';
@@ -11,32 +11,32 @@ import { FormsModule } from '@angular/forms';
 import { Subscription, take } from 'rxjs';
 import { CardModule } from 'primeng/card';
 
+import { LoginModalComponent } from "./login-modal/login-modal.component";
 import { EventSourceService } from './services/event-source.service';
-import { ApiService } from './services/api.service';
+import { ApiService, Message } from './services/api.service';
 
 
 @Component({
     selector: 'app-root',
     imports: [
-        CardModule,
-        RouterOutlet,
-        ButtonModule,
-        TextareaModule,
-        FormsModule,
-        InputGroupModule,
-        InputGroupAddonModule,
-        InputTextModule,
-        SelectModule,
-        InputNumberModule
-    ],
+    CardModule,
+    RouterOutlet,
+    ButtonModule,
+    TextareaModule,
+    FormsModule,
+    InputGroupModule,
+    InputGroupAddonModule,
+    InputTextModule,
+    SelectModule,
+    InputNumberModule,
+    LoginModalComponent
+],
     templateUrl: './app.component.html',
     styleUrl: './app.component.scss'
 })
 export class AppComponent {
     currentMessage: string | undefined;
-    messages = signal([
-        { message: "test", author: "front dev" },
-    ]);
+    messages: WritableSignal<Message[]> = signal([]);
 
     @HostListener('window:focus', [])
     onFocus() {
@@ -55,7 +55,7 @@ export class AppComponent {
 
     ngOnInit() {
         this.fetchMesages();
-        const url = 'http://192.168.35.126:3000/api/connect';
+        const url = 'http://localhost:3000/api/connect';
 
         this.eventSubscription = this.SSeService.getServerSentEvent(url).subscribe({
             next: (event) => {
@@ -73,9 +73,13 @@ export class AppComponent {
 
     private fetchMesages() {
         this.apiService.getMessages().pipe(take(1)).subscribe(rep => {
-            console.log(this.messages);
-            this.messages.set(rep);
-            console.log(this.messages);
+            console.log(this.messages());
+            const transformedMessages = rep.map(msg => ({
+                ...msg,
+                author: Array.isArray(msg.author) && msg.author.length === 1 ? msg.author[0] : msg.author
+            }));
+            this.messages.set(transformedMessages);
+            console.log(this.messages());
         })
     }
 
